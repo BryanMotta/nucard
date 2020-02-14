@@ -61,19 +61,7 @@ class FormCardCadastration extends StatelessWidget {
       ),
       body: Column(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _controllerTitle,
-              style: TextStyle(
-                fontSize: 24.0,
-              ),
-              decoration: InputDecoration(
-                labelText: 'Titulo',
-                hintText: 'Cartão do trabalho',
-              ),
-            ),
-          ),
+          Fomr()
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
@@ -89,11 +77,38 @@ class FormCardCadastration extends StatelessWidget {
           ),
           RaisedButton(
             child: Text('Cadastrar'),
-            onPressed: () {
-              MyCard(_controllerTitle.text, _controllerDescription.text);
-            },
+            onPressed: () => _createCard(),
           ),
         ],
+      ),
+    );
+  }
+
+  void _createCard() {
+    if ((_controllerTitle.text == null ||
+        _controllerDescription.text == null)) {
+      MyCard(_controllerTitle.text, _controllerDescription.text);
+    }
+  }
+}
+
+
+class Fomr extends StatelessWidget {
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        controller: _controllerTitle,
+        style: TextStyle(
+          fontSize: 24.0,
+        ),
+        decoration: InputDecoration(
+          labelText: 'Titulo',
+          hintText: 'Cartão do trabalho',
+        ),
       ),
     );
   }
