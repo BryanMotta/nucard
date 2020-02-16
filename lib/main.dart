@@ -8,28 +8,54 @@ class NuCard extends StatelessWidget {
     return MaterialApp(
       title: 'NuCard',
       theme: ThemeData.light(),
-      home: FormCardCadastration(),
+      home: MyCards(),
     );
   }
 }
 
-class MyCards extends StatelessWidget {
+class MyCards extends StatefulWidget {
+  final List<MyCard> _listOfMyCards = List();
+
+
+
+  @override
+  State<StatefulWidget> createState() {
+    return MyCardsState();
+  }
+}
+
+class MyCardsState extends State<MyCards>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('My Cards'),
       ),
-      body: Column(
-        children: <Widget>[
-          MyCard('Studio', '4° andar, Squad 19'),
-        ],
+      body: ListView.builder(
+          itemCount: widget._listOfMyCards.length ,
+          itemBuilder: (context, indice) {
+            final myCardIndice = widget._listOfMyCards[indice];
+            return myCardIndice;
+          }
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Future<MyCard> future = Navigator.push(
+              context, MaterialPageRoute(builder: (context) {
+            return FormCardCadastration();
+          }));
+          future.then((myCardReturned) {
+            widget._listOfMyCards.add(myCardReturned);
+          });
+        },),
     );
   }
+
 }
 
 class MyCard extends StatelessWidget {
+
   String _title;
   String _description;
 
@@ -45,6 +71,7 @@ class MyCard extends StatelessWidget {
       ),
     );
   }
+
 }
 
 class FormCardCadastration extends StatelessWidget {
@@ -61,55 +88,53 @@ class FormCardCadastration extends StatelessWidget {
       ),
       body: Column(
         children: <Widget>[
-          Fomr()
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _controllerDescription,
-              style: TextStyle(
-                fontSize: 24.0,
-              ),
-              decoration: InputDecoration(
-                labelText: 'Descrição',
-                hintText: '4° andar, Squad 19',
-              ),
-            ),
-          ),
+          Fomr(_controllerTitle, 'Titulo', 'Cartão do trabalho.'),
+          Fomr(_controllerDescription, 'Descrição', '4° andar, Squad 19'),
+
           RaisedButton(
             child: Text('Cadastrar'),
-            onPressed: () => _createCard(),
+            onPressed: () => _createCard(context),
           ),
         ],
       ),
     );
   }
 
-  void _createCard() {
-    if ((_controllerTitle.text == null ||
-        _controllerDescription.text == null)) {
-      MyCard(_controllerTitle.text, _controllerDescription.text);
+  void _createCard(BuildContext context) {
+    if (_controllerTitle.text != null &&
+        _controllerDescription.text != null) {
+      final myCardToReturn = MyCard(_controllerTitle.text, _controllerDescription.text);
+      Navigator.pop(context, myCardToReturn);
     }
   }
 }
 
 
 class Fomr extends StatelessWidget {
+  final TextEditingController _controller;
+  final String _titulo;
+  final String _descricao;
+  final IconData icon;
 
+  Fomr(this._controller, this._titulo, this._descricao, { this.icon});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(16.0),
       child: TextField(
-        controller: _controllerTitle,
+        controller: _controller,
         style: TextStyle(
           fontSize: 24.0,
         ),
         decoration: InputDecoration(
-          labelText: 'Titulo',
-          hintText: 'Cartão do trabalho',
+          icon: icon != null ? Icon(icon) : null,
+          labelText: _titulo,
+          hintText: _descricao,
         ),
       ),
     );
   }
 }
+
+
