@@ -16,15 +16,13 @@ class NuCard extends StatelessWidget {
 class MyCards extends StatefulWidget {
   final List<MyCard> _listOfMyCards = List();
 
-
-
   @override
   State<StatefulWidget> createState() {
     return MyCardsState();
   }
 }
 
-class MyCardsState extends State<MyCards>{
+class MyCardsState extends State<MyCards> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,30 +30,32 @@ class MyCardsState extends State<MyCards>{
         title: Text('My Cards'),
       ),
       body: ListView.builder(
-          itemCount: widget._listOfMyCards.length ,
+          itemCount: widget._listOfMyCards.length,
           itemBuilder: (context, indice) {
             final myCardIndice = widget._listOfMyCards[indice];
             return myCardIndice;
-          }
-      ),
+          }),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          Future<MyCard> future = Navigator.push(
-              context, MaterialPageRoute(builder: (context) {
+          Future<MyCard> future =
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
             return FormCardCadastration();
           }));
           future.then((myCardReturned) {
-            widget._listOfMyCards.add(myCardReturned);
+            if (myCardReturned != null) {
+              setState(() {
+                widget._listOfMyCards.add(myCardReturned);
+              });
+            }
           });
-        },),
+        },
+      ),
     );
   }
-
 }
 
 class MyCard extends StatelessWidget {
-
   String _title;
   String _description;
 
@@ -71,14 +71,18 @@ class MyCard extends StatelessWidget {
       ),
     );
   }
-
 }
 
-class FormCardCadastration extends StatelessWidget {
+class FormCardCadastration extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return FormCardCadastrationState();
+  }
+}
 
+class FormCardCadastrationState extends State<FormCardCadastration> {
   final TextEditingController _controllerTitle = TextEditingController();
   final TextEditingController _controllerDescription = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -86,29 +90,29 @@ class FormCardCadastration extends StatelessWidget {
       appBar: AppBar(
         title: Text('Cadastro de cartão.'),
       ),
-      body: Column(
-        children: <Widget>[
-          Fomr(_controllerTitle, 'Titulo', 'Cartão do trabalho.'),
-          Fomr(_controllerDescription, 'Descrição', '4° andar, Squad 19'),
-
-          RaisedButton(
-            child: Text('Cadastrar'),
-            onPressed: () => _createCard(context),
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Fomr(_controllerTitle, 'Titulo', 'Cartão do trabalho.'),
+            Fomr(_controllerDescription, 'Descrição', '4° andar, Squad 19'),
+            RaisedButton(
+              child: Text('Cadastrar'),
+              onPressed: () => _createCard(context),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   void _createCard(BuildContext context) {
-    if (_controllerTitle.text != null &&
-        _controllerDescription.text != null) {
-      final myCardToReturn = MyCard(_controllerTitle.text, _controllerDescription.text);
+    if (_controllerTitle.text != null && _controllerDescription.text != null) {
+      final myCardToReturn =
+          MyCard(_controllerTitle.text, _controllerDescription.text);
       Navigator.pop(context, myCardToReturn);
     }
   }
 }
-
 
 class Fomr extends StatelessWidget {
   final TextEditingController _controller;
@@ -116,7 +120,7 @@ class Fomr extends StatelessWidget {
   final String _descricao;
   final IconData icon;
 
-  Fomr(this._controller, this._titulo, this._descricao, { this.icon});
+  Fomr(this._controller, this._titulo, this._descricao, {this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -136,5 +140,3 @@ class Fomr extends StatelessWidget {
     );
   }
 }
-
-
