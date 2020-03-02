@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 
 class MyCard extends StatelessWidget {
   int id;
-  String title;
-  String description;
+  final String title;
+  final String description;
 
   MyCard(this.title, this.description);
 
@@ -18,4 +18,11 @@ class MyCard extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  String toString() {
+    return 'MyCard{id: $id, title: $title, description: $description}';
+  }
+
+
 }
