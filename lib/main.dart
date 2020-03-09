@@ -5,9 +5,6 @@ import 'package:nucard/screens/my_cards.dart';
 
 void main() {
   runApp(NuCard());
-  save(MyCard('Titi', 'Piranha')).then((id){
-    findAll().then((myCards) => debugPrint('sdfasf' + myCards.toString()));
-  });
 }
 
 class NuCard extends StatelessWidget {

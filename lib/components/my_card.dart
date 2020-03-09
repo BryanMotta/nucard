@@ -19,10 +19,7 @@ class MyCard extends StatelessWidget {
     );
   }
 
-  @override
-  String toString() {
-    return 'MyCard{id: $id, title: $title, description: $description}';
-  }
+  String toStrin() => 'MyCard{id: $id, title: $title, description: $description}';
 
 
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nucard/components/my_card.dart';
+import 'package:nucard/database/app_database.dart';
 import 'package:nucard/screens/form_cadastration.dart';
 
 class MyCards extends StatefulWidget {
@@ -19,12 +20,20 @@ class MyCardsState extends State<MyCards> {
       appBar: AppBar(
         title: Text('My Cards'),
       ),
-      body: ListView.builder(
-          itemCount: widget._listOfMyCards.length,
-          itemBuilder: (context, indice) {
-            final myCardIndice = widget._listOfMyCards[indice];
-            return myCardIndice;
-          }),
+      body: FutureBuilder(
+        future: findAll(),
+        builder: (context, snapshot) {
+          final List<MyCard> myCardsFound = snapshot.data;
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              final MyCard myCardIndex = myCardsFound[index];
+              return myCardIndex;
+
+            },
+              itemCount: myCardsFound.length,
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
