@@ -23,22 +23,41 @@ class MyCardsState extends State<MyCards> {
       body: FutureBuilder(
         future: findAll(),
         builder: (context, snapshot) {
-          final List<MyCard> myCardsFound = snapshot.data;
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              final MyCard myCardIndex = myCardsFound[index];
-              return myCardIndex;
-
-            },
-              itemCount: myCardsFound.length,
-          );
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              break;
+            case ConnectionState.waiting:
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    Text('Loading'),
+                  ],
+                ),
+              );
+              break;
+            case ConnectionState.active:
+              break;
+            case ConnectionState.done:
+              final List<MyCard> myCardsFound = snapshot.data;
+              return ListView.builder(
+                  itemBuilder: (context, index) {
+                    final myCardIndex = myCardsFound[index];
+                    return myCardIndex;
+                  },
+                  itemCount: myCardsFound.length);
+              break;
+          }
+          return Text('Unkown error');
         },
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
           Future<MyCard> future =
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
             return FormCardCadastration();
           }));
           future.then((myCardReturned) {

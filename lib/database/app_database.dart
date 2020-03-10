@@ -10,18 +10,19 @@ Future<Database> createDatabase() {
           'id INTEGER PRIMARY KEY, '
           'title TEXT, '
           'description INTEGER)');
-    }, version: 1);
+    }, version: 1,
+        onDowngrade: onDatabaseDowngradeDelete);
   });
 }
 
 Future<int> save(MyCard myCard) {
-  return  createDatabase().then((db) {
+  return createDatabase().then((db) {
     final Map<String, dynamic> myCardMap = Map();
     myCardMap['id'] = myCard.id;
     myCardMap['title'] = myCard.title;
     myCardMap['description'] = myCard.description;
 
-    return  db.insert('mycard', myCardMap);
+    return db.insert('mycard', myCardMap);
   });
 }
 
@@ -38,5 +39,12 @@ Future<List<MyCard>> findAll() {
       }
       return myCards;
     });
+  });
+}
+
+Future<void> deleteDatabase() {
+  return getDatabasesPath().then((dbPath) {
+    final String path = join(dbPath, 'nucard.db');
+    return databaseFactory.deleteDatabase(path);
   });
 }

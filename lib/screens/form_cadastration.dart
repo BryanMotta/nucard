@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nucard/components/form.dart';
 import 'package:nucard/components/my_card.dart';
+import 'package:nucard/database/app_database.dart';
 
 class FormCardCadastration extends StatefulWidget {
   @override
@@ -35,10 +36,11 @@ class FormCardCadastrationState extends State<FormCardCadastration> {
     );
   }
   void _createCard(BuildContext context) {
-    if (_controllerTitle.text != null && _controllerDescription.text != null) {
+    if ((_controllerTitle.text != null) && (_controllerDescription.text != null)) {
       final myCardToReturn =
       MyCard(_controllerTitle.text, _controllerDescription.text);
-      Navigator.pop(context, myCardToReturn);
+      save(myCardToReturn).then((id) => Navigator.pop(context));
+
     }
   }
 }
